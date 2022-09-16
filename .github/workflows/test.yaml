@@ -8,17 +8,22 @@ on:
     types: [created]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  prepare:
     if: | 
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test'))
-        && contains(github.event.comment.body, '-w ${{ matrix.env }}')
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: 
+          BODY=${{ github.event.comment.body }}
+          ./test.sh ${BODY#/test }
+        
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        include:
-          - env: "development"
-          - env: "staging"
-          - env: "production"
+      matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
       - run: echo ${{ matrix.env }}
