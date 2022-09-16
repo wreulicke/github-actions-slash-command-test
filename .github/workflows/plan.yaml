@@ -20,4 +20,17 @@ jobs:
         run: |
           BODY="${{ github.event.comment.body }}"
           ./test.sh ${BODY#/test }
+
+  apply:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: plan-result-${{ matrix.env }}
+          path: .plan
+      - run: cat .plan
   
