@@ -16,7 +16,7 @@ jobs:
       - id: set-matrix
         run: |
           BODY="${{ github.event.comment.body }}"
-          ./test.sh ${BODY#/test }
+          ./test.sh ${BODY#/apply }
 
   apply:
     needs: prepare
