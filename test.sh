@@ -46,5 +46,5 @@ if [ -z "$ENV" ]; then
   ENV="[]" ## all
 fi
 
-matrix=$(echo $ENVS | jq -cr "{ include: [.$TARGET$ENV] }")
+matrix=$(echo $ENVS | jq -cr "{ include: [$TARGET$ENV] }")
 echo ::set-output name=matrix::$matrix
