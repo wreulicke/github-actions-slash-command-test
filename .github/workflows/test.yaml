@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
-        run: 
+        run: |
           BODY=${{ github.event.comment.body }}
           ./test.sh ${BODY#/test }
         
