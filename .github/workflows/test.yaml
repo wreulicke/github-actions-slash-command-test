@@ -1,0 +1,21 @@
+name: terraform
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/test.yaml"
+  issue_comment:
+    types: [created]
+
+jobs:
+  test:
+    strategy:
+      if: (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test')) 
+      matrix:
+        include:
+          - env: "development"
+          - env: "staging"
+          - env: "production"
+      steps:
+        - run: echo ${{ matrix.env }}
+  
