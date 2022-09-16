@@ -16,7 +16,7 @@ jobs:
           - env: "development"
           - env: "staging"
           - env: "production"
-      steps:
-        - uses: actions/checkout@v2
-        - run: echo ${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo ${{ matrix.env }}
   
