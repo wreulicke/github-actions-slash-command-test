@@ -1,16 +1,13 @@
 name: terraform
 
 on:
-  pull_request:
-    paths:
-      - ".github/workflows/test.yaml"
   issue_comment:
     types: [created]
 
 jobs:
   prepare:
     if: | 
-      (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/plan'))
+      (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/apply'))
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -20,17 +17,16 @@ jobs:
         run: |
           BODY="${{ github.event.comment.body }}"
           ./test.sh ${BODY#/test }
-
-  apply:
+        
+  plan:
     needs: prepare
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
+      - run: echo ${{ matrix.env }} >> .plan
+      - uses: actions/upload-artifact@v3
         with:
           name: plan-result-${{ matrix.env }}
           path: .plan
-      - run: cat .plan
-  

@@ -17,19 +17,7 @@ jobs:
         run: |
           BODY="${{ github.event.comment.body }}"
           ./test.sh ${BODY#/test }
-        
-  plan:
-    needs: prepare
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo ${{ matrix.env }} >> .plan
-      - uses: actions/upload-artifact@v3
-        with:
-          name: plan-result-${{ matrix.env }}
-          path: .plan
+
   apply:
     needs: prepare
     runs-on: ubuntu-latest
@@ -37,5 +25,9 @@ jobs:
       matrix: ${{fromJson(needs.prepare.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v2
-      - run: echo ${{ matrix.env }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: plan-result-${{ matrix.env }}
+          path: .plan
+      - run: cat .plan
   
