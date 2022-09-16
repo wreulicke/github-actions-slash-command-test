@@ -11,6 +11,7 @@ jobs:
   prepare:
     if: | 
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test'))
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
