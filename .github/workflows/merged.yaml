@@ -3,6 +3,8 @@ name: merged
 on:
   pull_request:
     types: [closed]
+    branches:
+      - master
     paths:
       - ".github/workflows/merged.yaml"
 jobs:
