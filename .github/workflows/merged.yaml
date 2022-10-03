@@ -5,11 +5,8 @@ on:
     paths:
       - ".github/workflows/merged.yaml"
 jobs:
-  plan:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo test
   apply:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'master'
     steps:
       - run: echo ${{ github.base_ref }}    
